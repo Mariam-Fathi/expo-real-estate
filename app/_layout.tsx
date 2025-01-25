@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import "./global.css";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -24,12 +25,14 @@ export default function RootLayout() {
     return null;
   }
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        statusBarStyle: "dark",
-        statusBarBackgroundColor: "white",
-      }}
-    />
+    <AuthProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          statusBarStyle: "dark",
+          statusBarBackgroundColor: "white",
+        }}
+      />
+    </AuthProvider>
   );
 }

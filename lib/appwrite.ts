@@ -1,6 +1,11 @@
-import { Client, Account, ID, OAuthProvider } from "react-native-appwrite";
+import {
+  Client,
+  Account,
+  ID,
+  OAuthProvider,
+  Avatars,
+} from "react-native-appwrite";
 import * as WebBrowser from "expo-web-browser";
-import { makeRedirectUri } from "expo-auth-session";
 import * as Linking from "expo-linking";
 
 const client = new Client()
@@ -9,12 +14,12 @@ const client = new Client()
   .setPlatform("com.mf.homihunt");
 
 const account = new Account(client);
+const avatars = new Avatars(client);
 
-export async function login() {
+export const login = async () => {
   try {
     const deepLink = Linking.createURL("/");
-
-    const response = await account.createOAuth2Token(
+    const response = account.createOAuth2Token(
       OAuthProvider.Google,
       `${deepLink}`,
       `${deepLink}`
@@ -41,9 +46,9 @@ export async function login() {
     console.error(error);
     return false;
   }
-}
+};
 
-export async function logout() {
+export const logout = async () => {
   try {
     const result = await account.deleteSession("current");
     return result;
@@ -51,4 +56,20 @@ export async function logout() {
     console.error(error);
     return false;
   }
-}
+};
+
+export const getCurrentUser = async () => {
+  try {
+    const result = await account.get();
+    console.log(result);
+    const userAvatar = avatars.getInitials();
+    console.log(userAvatar);
+    if (result && userAvatar) {
+      return { ...result, avtar: userAvatar.toString() };
+    }
+    return null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
