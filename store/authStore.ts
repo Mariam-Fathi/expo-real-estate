@@ -14,22 +14,26 @@ interface User {
   email: string;
   avatar: string;
 }
-const useAuthStore = create<StoreType>((set) => ({
+export const useAuthStore = create<StoreType>((set) => ({
   isAuthenticated: false,
   loading: false,
   user: null,
   fetchCurrentUser: async () => {
+    console.log("fetchCurrentUser store.....");
     set({ loading: true });
     try {
       const currentUser = await getCurrentUser();
+      console.log("CurrentUser store... ", currentUser);
       set({
         user: currentUser,
         isAuthenticated: !!currentUser,
-        loading: true,
+        loading: false,
       });
     } catch (error) {
       console.log(error);
-      set({ loading: true });
+      set({ loading: false });
     }
   },
 }));
+
+useAuthStore.getState().fetchCurrentUser();
